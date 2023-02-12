@@ -6,14 +6,14 @@
 #    By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/04 13:41:24 by cbernot           #+#    #+#              #
-#    Updated: 2023/02/04 14:28:06 by cbernot          ###   ########.fr        #
+#    Updated: 2023/02/12 01:24:04 by cbernot          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
-SRCS = ./srcs/main.c ./srcs/utils.c ./srcs/routine.c
+SRCS = ./srcs/main.c ./srcs/utils.c ./srcs/init.c ./srcs/routines.c ./srcs/free.c
 OBJS = ${SRCS:.c=.o}
-INCLUDES = ./includes/philo.h
+INCLUDES = .././includes/philo.h
 FLAGS = -pthread
 
 %.o: %.c ${INCLUDES}
@@ -31,3 +31,5 @@ fclean: clean
 	rm -f ${NAME}
 
 re: fclean all
+
+.PHONY: all clean fclean re
