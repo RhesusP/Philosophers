@@ -6,12 +6,18 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/04 13:50:11 by cbernot           #+#    #+#             */
-/*   Updated: 2023/02/12 02:31:18 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/02/12 12:07:27 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./../includes/philo.h"
 
+/**
+ * @brief Wait for each philosopher and for the death_checker.
+ * 
+ * @param philos 
+ * @param nb_philos Number of philosophers.
+ */
 void	wait_threads(t_philo **philos, int nb_philos)
 {
 	int	i;
@@ -38,6 +44,7 @@ int	main(int argc, char **argv)
 	if (!create_philos_array(philos, &params))
 	{
 		free(philos);
+		free(params.forks);
 		return (0);
 	}
 	launch_threads(&params, philos);

@@ -1,17 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   routines.c                                         :+:      :+:    :+:   */
+/*   philo_routine.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 20:39:16 by cbernot           #+#    #+#             */
-/*   Updated: 2023/02/12 02:19:56 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/02/12 12:10:56 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./../includes/philo.h"
 
+/**
+ * @brief Take left and right forks. If the philosopher's id is even, then the 
+ * philosopher takes the left fork then the right fork. If the id is odd, it does
+ * the opposite.
+ * 
+ * @param philo Pointer to a philosopher.
+ */
 void	take_forks(t_philo *philo)
 {
 	int		is_dead;
@@ -37,28 +44,46 @@ void	take_forks(t_philo *philo)
 	}
 }
 
+/**
+ * @brief Philosopher printing its action and sleep for a time.
+ * 
+ * @param philo Pointer to a philosopher.
+ */
 void	ft_sleep(t_philo *philo)
 {
 	print_action(philo, "is sleeping");
 	ft_usleep(philo->params->time_to_sleep);
 }
 
+/**
+ * @brief a very complicated function that allows the philosopher to think.
+ * 
+ * @param philo Pointer to a philosopher.
+ */
 void	ft_think(t_philo *philo)
 {
 	print_action(philo, "is thinking");
 }
 
+/**
+ * @brief The philosopher's routine. Eat, sleep and think until he's dead. It 
+ * stops if the t_params's variable "is_dead" is true or if the philosophers
+ * ate more than max_meal (t_param's variable) times.
+ * 
+ * @param arg A pointer to a philosopher.
+ * @return NULL.
+ */
 void	*philo_routine(void *arg)
 {
-	t_philo *philo;
-	unsigned long long	last_meal;
+	t_philo	*philo;
+	int		max_meal;
 
 	philo = (t_philo *)arg;
+	max_meal = philo->params->max_meal;
 	while (!is_philo_dead(philo))
 	{
-		if (philo->params->max_meal >= 0 && philo->nb_meal >= philo->params->max_meal)
-			break;
-
+		if (max_meal >= 0 && philo->nb_meal >= max_meal)
+			break ;
 		take_forks(philo);
 		philo->last_meal_ts = get_current_ts();
 		print_action(philo, "is eating");
@@ -68,54 +93,6 @@ void	*philo_routine(void *arg)
 		philo->nb_meal++;
 		ft_sleep(philo);
 		ft_think(philo);
-	}
-	return (0);
-}
-
-
-
-
-int	death_checker(t_philo *philo, unsigned long long current_ms)
-{
-	unsigned long long	last_meal_ts;
-	
-	pthread_mutex_lock(&philo->last_meal_lock);
-	last_meal_ts = current_ms - philo->last_meal_ts;
-	pthread_mutex_unlock(&philo->last_meal_lock);
-	if (last_meal_ts > philo->params->time_to_die)
-	{
-		pthread_mutex_lock(&philo->params->write_lock);
-		pthread_mutex_lock(&philo->params->is_dead_lock);
-		philo->params->is_dead = 1;
-		pthread_mutex_unlock(philo->left_fork);
-		pthread_mutex_unlock(philo->right_fork);
-		pthread_mutex_unlock(&philo->params->is_dead_lock);
-		printf("\033[31m%lld %d died\033[39m\n", last_meal_ts, philo->id);
-		pthread_mutex_unlock(&philo->params->write_lock);
-		return (1);
-	}
-	return (0);
-}
-
-void	*death_checker_routine(void *arg)
-{
-	t_philo		**philos;
-	t_params	*params;
-	int			i;
-	unsigned long long	current_time;
-
-	philos = (t_philo **)arg;
-	params = philos[i]->params;
-	while (1)
-	{
-		i = 0;
-		current_time = get_current_ts() - params->start_ts;
-		while (i < params->nb_philos)
-		{
-			if (death_checker(philos[i], get_current_ts()))
-				return (0);
-		}
-		ft_usleep(1);
 	}
 	return (0);
 }

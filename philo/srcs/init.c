@@ -6,12 +6,19 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 19:04:54 by cbernot           #+#    #+#             */
-/*   Updated: 2023/02/12 02:15:13 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/02/12 17:16:39 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./../includes/philo.h"
 
+/**
+ * @brief Initialize nb_philos mutexes representing the forks.
+ * 
+ * @param param A pointer to t_params 
+ * @param nb_philos Number of philosophers (= number of forks).
+ * @return 1 if evrything is properly allocated. 0 if not.
+ */
 int	initialize_forks(t_params *param, int nb_philos)
 {
 	int	i;
@@ -22,22 +29,28 @@ int	initialize_forks(t_params *param, int nb_philos)
 		return (0);
 	while (i < nb_philos)
 	{
-		pthread_mutex_init(&(param->forks[i]), NULL);
+		if (pthread_mutex_init(&(param->forks[i]), NULL) != 0)
+		{
+			free(param->forks);
+			return (0);
+		}
 		i++;
 	}
 	return (1);
 }
 
 /**
- * @brief 
+ * @brief Initialize param struct thanks to argc and argv.
  * 
- * @param param 
- * @param argc 
+ * @param param Pointer to a t_params
+ * @param argc
  * @param argv 
- * @return 0 if error, 1 if all is good. 
+ * @return 1 if evrything is properly allocated. 0 if not.
  */
 int	init_params(t_params *param, int argc, char **argv)
 {
+	int	forks_ret;
+
 	if (argc < 5 || argc > 6)
 	{
 		printf("[!] USAGE: ./philo nb_philos die eat sleep [nb_meal]\n");
@@ -52,21 +65,36 @@ int	init_params(t_params *param, int argc, char **argv)
 		param->max_meal = ft_atoi(argv[5]);
 	param->start_ts = 0;
 	param->is_dead = 0;
-	pthread_mutex_init(&param->is_dead_lock, NULL);
-	pthread_mutex_unlock(&param->is_dead_lock);
-	pthread_mutex_init(&param->write_lock, NULL);
-	pthread_mutex_unlock(&param->write_lock);
-	if (param->nb_philos <= 0 || param->time_to_die <= 0 || param->time_to_eat <= 0 || param->time_to_sleep <= 0 || (argc == 6 && param->max_meal <= 0) || initialize_forks(param, param->nb_philos) == 0)
+	if (pthread_mutex_init(&param->is_dead_lock, NULL))
 		return (0);
+	pthread_mutex_unlock(&param->is_dead_lock);
+	if (pthread_mutex_init(&param->write_lock, NULL))
+		return (0);
+	pthread_mutex_unlock(&param->write_lock);
+	forks_ret = initialize_forks(param, param->nb_philos);
+	if (param->nb_philos <= 0 || param->time_to_die <= 0 || param->time_to_eat <= 0 || param->time_to_sleep <= 0 || (argc == 6 && param->max_meal <= 0) || forks_ret == 0)
+	{
+		if (param->forks)
+			free(param->forks);
+		return (0);
+	}
 	return (1);
 }
 
-void	init_philo(t_philo *philo, int id, t_params *param)
+/**
+ * @brief Initialize fields of a single philosophers.
+ * 
+ * @param philo Pointer to a t_philo. 
+ * @param id Philosopher identifier. 
+ * @param param Pointer to t_params.
+ * @return 1 if mutex properly initialized. 0 if not.
+ */
+int	init_philo(t_philo *philo, int id, t_params *param)
 {
-
 	philo->id = id + 1;
 	philo->last_meal_ts = 0;
-	pthread_mutex_init(&philo->last_meal_lock, NULL);
+	if (pthread_mutex_init(&philo->last_meal_lock, NULL))
+		return (0);
 	philo->nb_meal = 0;
 	philo->params = param;
 	philo->left_fork = &param->forks[id];
@@ -74,8 +102,16 @@ void	init_philo(t_philo *philo, int id, t_params *param)
 		philo->right_fork = &param->forks[param->nb_philos - 1];
 	else
 		philo->right_fork = &param->forks[id - 1];
+	return (1);
 }
 
+/**
+ * @brief Initialize a t_philo array thanks to param rules.
+ * 
+ * @param philos Pointer to t_philo array.
+ * @param param Pointer to t_params
+ * @return 1 of evrything is properly allocated. 0 if not.
+ */
 int	create_philos_array(t_philo **philos, t_params *param)
 {
 	int	i;
@@ -86,12 +122,23 @@ int	create_philos_array(t_philo **philos, t_params *param)
 	i = 0;
 	while (i < param->nb_philos)
 	{
-		init_philo(&(*philos)[i], i, param);
+		if (!init_philo(&(*philos)[i], i, param))
+		{
+			free(param->forks);
+			free(*philos);
+			return (0);
+		}
 		i++;
 	}
 	return (1);
 }
 
+/**
+ * @brief Launch threads reprensenting philosophers and one death checker.
+ * 
+ * @param params Pointer to t_params.
+ * @param philos Pointer to t_philo array.
+ */
 void	launch_threads(t_params *params, t_philo **philos)
 {
 	int	i;

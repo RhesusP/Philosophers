@@ -5,52 +5,18 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/11 19:03:05 by cbernot           #+#    #+#             */
-/*   Updated: 2023/02/12 01:08:39 by cbernot          ###   ########.fr       */
+/*   Created: 2023/02/12 11:57:46 by cbernot           #+#    #+#             */
+/*   Updated: 2023/02/12 12:08:25 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./../includes/philo.h"
 
-static int	ft_isspace(const char c)
-{
-	if ((c >= 9 && c <= 13) || c == 32)
-		return (1);
-	return (0);
-}
-
-int	ft_isdigit(int c)
-{
-	if (c >= 48 && c <= 57)
-		return (1);
-	return (0);
-}
-
-int	ft_atoi(const char *str)
-{
-	int		res;
-	size_t	i;
-	int		sign;
-
-	res = 0;
-	sign = 1;
-	i = 0;
-	while (ft_isspace(str[i]))
-		i++;
-	if (str[i] == '+' || str[i] == '-')
-	{
-		if (str[i] == '-')
-			sign *= -1;
-		i++;
-	}
-	while (ft_isdigit(str[i]))
-	{
-		res = res * 10 + str[i] - 48;
-		i++;
-	}
-	return (res * sign);
-}
-
+/**
+ * @brief Get the current in millisecondes.
+ * 
+ * @return unsigned long long 
+ */
 unsigned long long	get_current_ts(void)
 {
 	struct timeval	curr;
@@ -59,15 +25,27 @@ unsigned long long	get_current_ts(void)
 	return (curr.tv_sec * 1000 + curr.tv_usec / 1000);
 }
 
+/**
+ * @brief Smart usleep.
+ * 
+ * @param ms_duration Duration in millisecondes.
+ */
 void	ft_usleep(unsigned long long ms_duration)
 {
 	unsigned long long	start_time;
-	
+
 	start_time = get_current_ts();
 	while ((get_current_ts() - start_time) < ms_duration)
 		usleep(100);
 }
 
+/**
+ * @brief Securely prints philospher's action in the following format:
+ * "ms_timestamp id action"
+ * 
+ * @param philo Pointer to a philopher.
+ * @param action Action to print.
+ */
 void	print_action(t_philo *philo, char *action)
 {
 	unsigned long long	current_time;
@@ -79,6 +57,12 @@ void	print_action(t_philo *philo, char *action)
 	pthread_mutex_unlock(&philo->params->write_lock);
 }
 
+/**
+ * @brief Securely check and return is_dead variable.
+ * 
+ * @param philo Pointer to a philosopher.
+ * @return is_dead value.
+ */
 int	is_philo_dead(t_philo *philo)
 {
 	int	is_dead;
