@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 20:39:16 by cbernot           #+#    #+#             */
-/*   Updated: 2023/02/12 01:18:01 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/02/12 02:19:56 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,9 @@ void	*philo_routine(void *arg)
 	}
 	return (0);
 }
+
+
+
 
 int	death_checker(t_philo *philo, unsigned long long current_ms)
 {

@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/04 13:50:11 by cbernot           #+#    #+#             */
-/*   Updated: 2023/02/12 01:21:57 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/02/12 02:31:18 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	wait_threads(t_philo **philos, int nb_philos)
 		pthread_join((*philos)[i].thread, NULL);
 		i++;
 	}
+	pthread_join((*philos)[0].params->death_checker, NULL);
 }
 
 int	main(int argc, char **argv)
@@ -41,5 +42,6 @@ int	main(int argc, char **argv)
 	}
 	launch_threads(&params, philos);
 	wait_threads(philos, params.nb_philos);
+	free_stuff(philos, &params);
 	return (0);
 }

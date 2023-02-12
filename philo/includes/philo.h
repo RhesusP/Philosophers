@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/04 13:23:06 by cbernot           #+#    #+#             */
-/*   Updated: 2023/02/12 00:28:00 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/02/12 02:35:53 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ void	launch_threads(t_params *params, t_philo **philos);
 void	*philo_routine(void *arg);
 void	*death_checker_routine(void *arg);
 
-void	print_param(t_params *param);
-void	print_philo(t_philo *philo);
+void	free_stuff(t_philo **philos, t_params *param);
 
 #endif
