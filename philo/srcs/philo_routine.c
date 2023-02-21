@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 20:39:16 by cbernot           #+#    #+#             */
-/*   Updated: 2023/02/12 12:10:56 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/02/21 22:29:08 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	*philo_routine(void *arg)
 			break ;
 		take_forks(philo);
 		philo->last_meal_ts = get_current_ts();
-		print_action(philo, "is eating");
+		print_action(philo, "\033[95mis eating\033[39m");
 		ft_usleep(philo->params->time_to_eat);
 		pthread_mutex_unlock(philo->left_fork);
 		pthread_mutex_unlock(philo->right_fork);

@@ -6,12 +6,14 @@
 #    By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/04 13:41:24 by cbernot           #+#    #+#              #
-#    Updated: 2023/02/12 11:59:31 by cbernot          ###   ########.fr        #
+#    Updated: 2023/02/21 22:38:42 by cbernot          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
-SRCS = ./srcs/main.c ./srcs/utils.c ./srcs/init.c ./srcs/philo_routine.c ./srcs/death_checker_routine.c ./srcs/free.c ./srcs/ft_atoi.c
+SRCS = ./srcs/main.c ./srcs/utils.c ./srcs/init_philo.c ./srcs/init_params.c \
+	   ./srcs/philo_routine.c ./srcs/death_checker_routine.c ./srcs/free.c \
+	   ./srcs/ft_atoi.c
 OBJS = ${SRCS:.c=.o}
 INCLUDES = ./includes
 FLAGS = -Wall -Werror -Wextra -pthread
