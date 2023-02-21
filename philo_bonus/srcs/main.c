@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 22:41:47 by cbernot           #+#    #+#             */
-/*   Updated: 2023/02/19 23:37:32 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/02/20 20:00:19 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,11 @@ int	init_params(int argc, char **argv, t_params *params)
 	params->pids = malloc(sizeof(pid_t) * params->nb_philos);
 	if (!params->pids)
 		return (0);
-	sem_init(&params->forks, 0, params->nb_philos);
+	params->forks = malloc(sizeof(sem_t));
+	sem_init(params->forks, 0, params->nb_philos + 5);
+	int val;
+	sem_getvalue(params->forks, &val);
+	printf("sem: %d\n", val);
 	return (1);
 }
 
@@ -76,16 +80,17 @@ void	launch_forks(t_params *params)
 
 int	main(int argc, char **argv)
 {
-	t_params	params;
+	t_params	*params;
 
-	if (!init_params(argc, argv, &params))
+	params = malloc(sizeof(t_params));
+	if (!init_params(argc, argv, params))
 		return (0);
-	launch_forks(&params);
+	launch_forks(params);
 	wait(NULL);
 	int	i = 0;
-	while (i < params.nb_philos)
+	while (i < params->nb_philos)
 	{
-		printf("pid[%d]: %d\n", i, params.pids[i]);
+		printf("pid[%d]: %d\n", i, params->pids[i]);
 		i++;
 	}
 	printf("Father finished\n");

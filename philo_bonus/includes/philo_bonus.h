@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/04 13:23:06 by cbernot           #+#    #+#             */
-/*   Updated: 2023/02/19 23:27:32 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/02/20 19:59:27 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ typedef struct s_params
 	int					max_meal;
 	unsigned long long	start_ts;
 	pid_t				*pids;
-	sem_t				forks;
+	sem_t				*forks;
 }	t_params;
 
 typedef struct s_philo
