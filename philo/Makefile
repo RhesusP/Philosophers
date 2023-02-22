@@ -6,7 +6,7 @@
 #    By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/04 13:41:24 by cbernot           #+#    #+#              #
-#    Updated: 2023/02/21 22:38:42 by cbernot          ###   ########.fr        #
+#    Updated: 2023/02/22 18:51:29 by cbernot          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ FLAGS = -Wall -Werror -Wextra -pthread
 	cc ${FLAGS} -I ${INCLUDES} -c $< -o $@
 
 ${NAME}: ${OBJS}
-	cc ${OBJS} -o ${NAME}
+	cc ${OBJS} -pthread -o ${NAME}
 
 all: ${NAME}
 

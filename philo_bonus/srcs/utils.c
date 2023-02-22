@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 23:24:25 by cbernot           #+#    #+#             */
-/*   Updated: 2023/02/19 23:27:24 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/02/22 17:54:58 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,18 @@ void	print_action(t_philo *philo, char *action)
 	unsigned long long	current_time;
 
 	current_time = get_current_ts() - philo->params->start_ts;
-	//pthread_mutex_lock(&philo->params->write_lock);
-	//if (!is_philo_dead(philo))
-	printf("%lld %d %s\n", current_time, philo->id, action);
-	//pthread_mutex_unlock(&philo->params->write_lock);
+	sem_wait(philo->params->write_lock);
+	if (!is_philo_dead(philo))
+		printf("%lld %d %s\n", current_time, philo->id, action);
+	sem_post(philo->params->write_lock);
+}
+
+int	is_philo_dead(t_philo *philo)
+{
+	int	is_dead;
+
+	sem_wait(philo->params->is_dead_lock);
+	is_dead = philo->params->is_dead;
+	sem_post(philo->params->is_dead_lock);
+	return (is_dead);
 }
