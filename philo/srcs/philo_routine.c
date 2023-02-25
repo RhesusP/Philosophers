@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 20:39:16 by cbernot           #+#    #+#             */
-/*   Updated: 2023/02/21 22:29:08 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/02/25 17:58:53 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,17 +30,17 @@ void	take_forks(t_philo *philo)
 		return ;
 	if (philo->id % 2 == 0)
 	{
-		print_action(philo, "has taken a fork");
 		pthread_mutex_lock(philo->left_fork);
 		print_action(philo, "has taken a fork");
 		pthread_mutex_lock(philo->right_fork);
+		print_action(philo, "has taken a fork");
 	}
 	else
 	{
-		print_action(philo, "has taken a fork");
 		pthread_mutex_lock(philo->right_fork);
 		print_action(philo, "has taken a fork");
 		pthread_mutex_lock(philo->left_fork);
+		print_action(philo, "has taken a fork");
 	}
 }
 
