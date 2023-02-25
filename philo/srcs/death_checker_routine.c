@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 11:09:43 by cbernot           #+#    #+#             */
-/*   Updated: 2023/02/21 22:29:41 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/02/26 00:11:42 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ int	death_checker(t_philo *philo, unsigned long long current_ms)
 		pthread_mutex_unlock(philo->left_fork);
 		pthread_mutex_unlock(philo->right_fork);
 		pthread_mutex_unlock(&philo->params->is_dead_lock);
-		printf("\033[31m%lld %d died\033[39m\n", last_meal_ts, philo->id);
+		if (philo->nb_meal != philo->params->max_meal)
+			printf("\033[31m%lld %d died\033[39m\n", last_meal_ts, philo->id);
 		pthread_mutex_unlock(&philo->params->write_lock);
 		return (1);
 	}
