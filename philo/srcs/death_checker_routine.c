@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 11:09:43 by cbernot           #+#    #+#             */
-/*   Updated: 2023/02/26 00:11:42 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/03/08 11:52:46 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ int	death_checker(t_philo *philo, unsigned long long current_ms)
 		pthread_mutex_unlock(&philo->params->write_lock);
 		return (1);
 	}
+	else if (philo->nb_meal >= philo->params->max_meal)
+		return (1);
 	return (0);
 }
 
@@ -64,8 +66,9 @@ void	*death_checker_routine(void *arg)
 		i = 0;
 		while (i < params->nb_philos)
 		{
-			if (death_checker(philos[i], get_current_ts()))
+			if (death_checker(&(*philos)[i], get_current_ts()))
 				return (0);
+			i++;
 		}
 		ft_usleep(1);
 	}
