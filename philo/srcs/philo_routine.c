@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 20:39:16 by cbernot           #+#    #+#             */
-/*   Updated: 2023/02/26 00:09:51 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/04/04 14:11:57 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,14 +76,10 @@ void	ft_think(t_philo *philo)
 void	*philo_routine(void *arg)
 {
 	t_philo	*philo;
-	int		max_meal;
 
 	philo = (t_philo *)arg;
-	max_meal = philo->params->max_meal;
 	while (!is_philo_dead(philo))
 	{
-		if (max_meal >= 0 && philo->nb_meal >= max_meal)
-			break ;
 		take_forks(philo);
 		philo->last_meal_ts = get_current_ts();
 		print_action(philo, "\033[95mis eating\033[39m");
@@ -91,6 +87,8 @@ void	*philo_routine(void *arg)
 		pthread_mutex_unlock(philo->left_fork);
 		pthread_mutex_unlock(philo->right_fork);
 		philo->nb_meal++;
+		if (philo->params->all_ate)
+			break;
 		ft_sleep(philo);
 		ft_think(philo);
 	}

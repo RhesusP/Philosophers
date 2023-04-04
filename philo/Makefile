@@ -6,7 +6,7 @@
 #    By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/04 13:41:24 by cbernot           #+#    #+#              #
-#    Updated: 2023/02/26 00:09:36 by cbernot          ###   ########.fr        #
+#    Updated: 2023/04/04 14:23:09 by cbernot          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,13 +16,13 @@ SRCS = ./srcs/main.c ./srcs/utils.c ./srcs/init_philo.c ./srcs/init_params.c \
 	   ./srcs/ft_atoi.c
 OBJS = ${SRCS:.c=.o}
 INCLUDES = ./includes
-FLAGS = -Wall -Werror -Wextra -pthread
+FLAGS = -Wall -Werror -Wextra -pthread -fsanitize=thread -g -ltsan
 
-%.o : %.c ./includes/philo.h
+%.o : %.c ./includes/philo.h Makefile
 	cc ${FLAGS} -I ${INCLUDES} -c $< -o $@
 
 ${NAME}: ${OBJS}
-	cc ${OBJS} -pthread -o ${NAME}
+	cc ${OBJS} -pthread -ltsan -o ${NAME}
 
 all: ${NAME}
 
