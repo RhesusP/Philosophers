@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 22:22:35 by cbernot           #+#    #+#             */
-/*   Updated: 2023/04/04 14:28:54 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/04/04 23:06:15 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ int	init_param_mutexes(t_params *param)
 	if (pthread_mutex_init(&param->is_dead_lock, NULL))
 		return (0);
 	if (pthread_mutex_init(&param->write_lock, NULL))
+		return (0);
+	if (pthread_mutex_init(&param->all_eat_lock, NULL))
 		return (0);
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 19:04:54 by cbernot           #+#    #+#             */
-/*   Updated: 2023/04/04 14:29:11 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/04/04 23:06:41 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ int	init_philo(t_philo *philo, int id, t_params *param)
 	philo->id = id + 1;
 	philo->last_meal_ts = 0;
 	if (pthread_mutex_init(&philo->last_meal_lock, NULL))
+		return (0);
+	if (pthread_mutex_init(&philo->nb_meal_lock, NULL))
 		return (0);
 	philo->nb_meal = 0;
 	philo->params = param;

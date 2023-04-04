@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/04 13:50:11 by cbernot           #+#    #+#             */
-/*   Updated: 2023/04/04 14:23:15 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/04/04 22:52:15 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	main(int argc, char **argv)
 {
 	t_params	params;
 
-	if (!init_params(&params, argc, argv))		// TODO catch miss-malloc
+	if (!init_params(&params, argc, argv))
 		return (0);
 	launch_threads(&params);
 	wait_threads(params);
