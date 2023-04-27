@@ -6,20 +6,12 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/11 19:04:54 by cbernot           #+#    #+#             */
-/*   Updated: 2023/04/04 23:06:41 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/04/27 11:19:26 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./../includes/philo.h"
 
-/**
- * @brief Initialize fields of a single philosophers.
- * 
- * @param philo Pointer to a t_philo. 
- * @param id Philosopher identifier. 
- * @param param Pointer to t_params.
- * @return 1 if mutex properly initialized. 0 if not.
- */
 int	init_philo(t_philo *philo, int id, t_params *param)
 {
 	philo->id = id + 1;
@@ -38,13 +30,6 @@ int	init_philo(t_philo *philo, int id, t_params *param)
 	return (1);
 }
 
-/**
- * @brief Initialize a t_philo array thanks to param rules.
- * 
- * @param philos Pointer to t_philo array.
- * @param param Pointer to t_params
- * @return 1 of evrything is properly allocated. 0 if not.
- */
 int	create_philos_array(t_philo **philos, t_params *param)
 {
 	int	i;

@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 22:22:35 by cbernot           #+#    #+#             */
-/*   Updated: 2023/04/04 23:06:15 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/04/27 13:15:08 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	initialize_forks(t_params *param, int nb_philos)
 	{
 		if (pthread_mutex_init(&(param->forks[i]), NULL) != 0)
 		{
-			free(param->forks);			//TODO free all
+			free(param->forks);
 			return (0);
 		}
 		i++;
@@ -43,54 +43,60 @@ int	init_param_mutexes(t_params *param)
 	return (1);
 }
 
-int	check_param_values(t_params *param, int argc, int forks_ret)
+int	check_param_values(t_params *param, int argc)
 {
-	if (param->nb_philos <= 0 || param->time_to_die <= 0)
-		return (0);
-	if (param->time_to_eat <= 0 || param->time_to_sleep <= 0)
-		return (0);
-	if ((argc == 6 && param->max_meal <= 0) || forks_ret == 0)
+	if (param->nb_philos <= 0 || param->time_to_die <= 0 || \
+	param->time_to_eat <= 0 || param->time_to_sleep <= 0 || \
+	(argc == 6 && param->max_meal <= 0))
 	{
-		if (param->forks)
-			free(param->forks);
+		printf("[!] Error: Arguments cannot be null or negative");
 		return (0);
 	}
 	return (1);
 }
 
-int	init_params(t_params *param, int argc, char **argv)
+int	create_philos(t_params *param)
 {
-	int	forks_ret;
 	int	i;
 
-	if (argc < 5 || argc > 6)
-	{
-		printf("[!] USAGE: ./philo nb_philos die eat sleep [nb_meal]\n");
-		return (0);
-	}
-	param->nb_philos = ft_atoi(argv[1]);
-	param->time_to_die = ft_atoi(argv[2]);
-	param->time_to_eat = ft_atoi(argv[3]);
-	param->time_to_sleep = ft_atoi(argv[4]);
-	param->all_ate = 0;
-	param->max_meal = -1;
-	if (argc == 6)
-		param->max_meal = ft_atoi(argv[5]);
-	param->start_ts = 0;
-	param->is_dead = 0;
-	if (!init_param_mutexes(param))
-		return (0);
-	forks_ret = initialize_forks(param, param->nb_philos);
-	if (!check_param_values(param, argc, forks_ret))
-		return (0);
 	param->philo_tab = malloc(sizeof(t_philo) * param->nb_philos);
 	if (!param->philo_tab)
 		return (0);
 	i = 0;
 	while (i < param->nb_philos)
 	{
-		init_philo(&(param->philo_tab[i]), i, param);	// TODO catch return 0
-		i++; 
+		if (!init_philo(&(param->philo_tab[i]), i, param))
+		{
+			free(param->philo_tab);
+			return (0);
+		}
+		i++;
 	}
+	return (1);
+}
+
+int	init_params(t_params *param, int argc, char **argv)
+{
+	if (argc < 5 || argc > 6)
+	{
+		printf("[!] USAGE: ./philo nb_philos die eat sleep [nb_meal]\n");
+		return (0);
+	}
+	inputs_to_params(param, argc, argv);
+	if (!check_param_values(param, argc))
+		return (0);
+	if (!init_param_mutexes(param))
+		return (0);
+	if (!initialize_forks(param, param->nb_philos))
+	{
+		if (param->forks)
+			free(param->forks);
+		return (0);
+	}
+	if (!create_philos(param))
+	{
+		free(param->forks);
+		return (0);
+	}	
 	return (1);
 }

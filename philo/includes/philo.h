@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/04 13:23:06 by cbernot           #+#    #+#             */
-/*   Updated: 2023/04/04 23:07:06 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/04/27 12:56:04 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include <sys/time.h>
 # include <pthread.h>
 
-struct s_philo;
+struct	s_philo;
 
 typedef struct s_params
 {
@@ -57,17 +57,18 @@ unsigned long long	get_current_ts(void);
 void				ft_usleep(unsigned long long ms_duration);
 void				print_action(t_philo *philo, char *action);
 int					is_philo_dead(t_params *param);
-int	did_all_philos_eat(t_params *param);
+int					did_all_philos_eat(t_params *param);
 
 int					init_params(t_params *param, int argc, char **argv);
 int					create_philos_array(t_philo **philos, t_params *param);
 void				launch_threads(t_params *params);
 
-int	init_philo(t_philo *philo, int id, t_params *param);
+int					init_philo(t_philo *philo, int id, t_params *param);
 
 void				*philo_routine(void *arg);
 void				*death_checker_routine(void *arg);
 
 void				free_stuff(t_params *param);
+void				inputs_to_params(t_params *param, int argc, char **argv);
 
 #endif
