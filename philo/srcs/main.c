@@ -6,26 +6,27 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/04 13:50:11 by cbernot           #+#    #+#             */
-/*   Updated: 2023/04/04 22:52:15 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/05/25 12:00:45 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./../includes/philo.h"
 
-void	wait_threads(t_params param)
+void	wait_threads(t_params *params)
 {
 	int	i;
 
 	i = 0;
-	while (i < param.nb_philos)
+	while (i < params->nb_philos)
 	{
-		pthread_join(param.philo_tab[i].thread, NULL);
+		pthread_join(params->philo_tab[i].thread, NULL);
 		i++;
 	}
-	pthread_join(param.death_checker, NULL);
+	if (params->nb_philos > 1)
+		pthread_join(params->death_checker, NULL);
 }
 
-void	launch_threads(t_params *params)
+int	launch_threads(t_params *params)
 {
 	int	i;
 
@@ -33,13 +34,25 @@ void	launch_threads(t_params *params)
 	i = 0;
 	while (i < params->nb_philos)
 	{
-		params->philo_tab[i].last_meal_ts = params->start_ts;
-		pthread_create(&(params->philo_tab[i].thread), NULL,
-			philo_routine, &(params->philo_tab[i]));
+		if (pthread_create(&params->philo_tab[i].thread, NULL, &philo_routine, &params->philo_tab[i]) != 0)
+			return (print_error("one of the philosopher threads failed to launch."));
 		i++;
 	}
-	pthread_create(&(*params).death_checker, NULL,
-		death_checker_routine, params);
+	if (params->nb_philos > 1)
+	{
+		if (pthread_create(&params->death_checker, NULL, &death_routine, params) != 0)
+			return (print_error("death checker thread failed to launch."));
+	}
+	return (1);
+}
+
+void	debug_print_params(t_params *params)
+{
+	printf("nb_philos: %d\n", params->nb_philos);
+	printf("t_die: %d\n", params->time_to_die);
+	printf("t_eat: %d\n", params->time_to_eat);
+	printf("t_sleep: %d\n", params->time_to_sleep);
+	printf("max_meal: %d\n", params->max_meal);
 }
 
 int	main(int argc, char **argv)
@@ -47,9 +60,11 @@ int	main(int argc, char **argv)
 	t_params	params;
 
 	if (!init_params(&params, argc, argv))
-		return (0);
-	launch_threads(&params);
-	wait_threads(params);
-	free_stuff(&params);
-	return (0);
+		return (EXIT_FAILURE);
+	// debug_print_params(&params);
+	if (!launch_threads(&params))
+		return (EXIT_FAILURE);
+	wait_threads(&params);
+	//free();
+	return (EXIT_SUCCESS);
 }

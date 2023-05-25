@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 11:57:46 by cbernot           #+#    #+#             */
-/*   Updated: 2023/04/27 11:05:15 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/05/24 18:14:46 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,33 +29,13 @@ void	ft_usleep(unsigned long long ms_duration)
 		usleep(100);
 }
 
-void	print_action(t_philo *philo, char *action)
-{
-	unsigned long long	current_time;
+// void	print_action(t_philo *philo, char *action)
+// {
+// 	unsigned long long	current_time;
 
-	current_time = get_current_ts() - philo->params->start_ts;
-	pthread_mutex_lock(&philo->params->write_lock);
-	if (!is_philo_dead(philo->params))
-		printf("%lld %d %s\n", current_time, philo->id, action);
-	pthread_mutex_unlock(&philo->params->write_lock);
-}
-
-int	is_philo_dead(t_params *param)
-{
-	int	is_dead;
-
-	pthread_mutex_lock(&param->is_dead_lock);
-	is_dead = param->is_dead;
-	pthread_mutex_unlock(&param->is_dead_lock);
-	return (is_dead);
-}
-
-int	did_all_philos_eat(t_params *param)
-{
-	int	all_eat;
-
-	pthread_mutex_lock(&param->all_eat_lock);
-	all_eat = param->all_ate;
-	pthread_mutex_unlock(&param->all_eat_lock);
-	return (all_eat);
-}
+// 	current_time = get_current_ts() - philo->params->start_ts;
+// 	pthread_mutex_lock(&philo->params->write_lock);
+// 	if (!is_philo_dead(philo->params))
+// 		printf("%lld %d %s\n", current_time, philo->id, action);
+// 	pthread_mutex_unlock(&philo->params->write_lock);
+// }
