@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:39:24 by cbernot           #+#    #+#             */
-/*   Updated: 2023/05/25 12:03:03 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/05/25 16:18:50 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,7 @@ void	*death_routine(void *arg)
 	t_params	*params;
 
 	params = (t_params *)arg;
-	printf("The reaper is here...\n");
-	//maybe add a delay to synchronise threads
+	usleep(10);
 	while (1)
 	{
 		if (need_stop(params))

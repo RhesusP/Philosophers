@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/04 13:50:11 by cbernot           #+#    #+#             */
-/*   Updated: 2023/05/25 12:00:45 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/05/25 13:43:42 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,10 @@ int	main(int argc, char **argv)
 
 	if (!init_params(&params, argc, argv))
 		return (EXIT_FAILURE);
-	// debug_print_params(&params);
 	if (!launch_threads(&params))
 		return (EXIT_FAILURE);
 	wait_threads(&params);
-	//free();
+	free(params.philo_tab);
+	free(params.forks);
 	return (EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:14:36 by cbernot           #+#    #+#             */
-/*   Updated: 2023/05/24 20:26:02 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/05/25 16:30:43 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	ft_sleep(t_params *params, unsigned long long time)
 	while (get_current_ts() < limit)
 	{
 		if (is_stopped(params))
-			break;
+			break ;
 		usleep(100);
 	}
 }
@@ -35,7 +35,7 @@ void	*alone_philo_routine(t_philo *philo)
 	return (NULL);
 }
 
-void	ft_eat(t_philo *philo)
+void	take_forks(t_philo *philo)
 {
 	if (philo->id % 2 == 0)
 	{
@@ -51,6 +51,11 @@ void	ft_eat(t_philo *philo)
 		pthread_mutex_lock(&philo->params->forks[philo->left_fork]);
 		print_action(philo, "has taken a fork");
 	}
+}
+
+void	ft_eat(t_philo *philo)
+{
+	take_forks(philo);
 	print_action(philo, "is eating");
 	pthread_mutex_lock(&philo->last_meal_lock);
 	philo->last_meal_ts = get_current_ts();
@@ -68,18 +73,11 @@ void	ft_eat(t_philo *philo)
 	ft_sleep(philo->params, philo->params->time_to_sleep);
 }
 
-void	ft_think(t_philo *philo)
-{
-	print_action(philo, "is thinking");
-}
-
 void	*philo_routine(void *arg)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	printf("Hello, I'm philo %d\n", philo->id);
-
 	pthread_mutex_lock(&philo->last_meal_lock);
 	philo->last_meal_ts = philo->params->start_ts;
 	pthread_mutex_unlock(&philo->last_meal_lock);
@@ -88,8 +86,7 @@ void	*philo_routine(void *arg)
 	while (!is_stopped(philo->params))
 	{
 		ft_eat(philo);
-		ft_think(philo);
+		print_action(philo, "is thinking");
 	}
-
 	return (NULL);
 }

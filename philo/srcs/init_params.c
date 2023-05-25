@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 22:22:35 by cbernot           #+#    #+#             */
-/*   Updated: 2023/05/24 20:26:12 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/05/25 13:39:38 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ int	init_philos(t_params *params)
 {
 	int	i;
 
-	params->philo_tab = malloc(sizeof(pthread_t) * (params->nb_philos + 1));
+	params->philo_tab = malloc(sizeof(t_philo) * (params->nb_philos + 1));
 	if (!params->philo_tab)
 	{
 		free(params->forks);
