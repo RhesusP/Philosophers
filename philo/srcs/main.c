@@ -6,13 +6,13 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/04 13:50:11 by cbernot           #+#    #+#             */
-/*   Updated: 2023/05/25 13:43:42 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/05/25 16:47:37 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./../includes/philo.h"
 
-void	wait_threads(t_params *params)
+static void	wait_threads(t_params *params)
 {
 	int	i;
 
@@ -26,7 +26,7 @@ void	wait_threads(t_params *params)
 		pthread_join(params->death_checker, NULL);
 }
 
-int	launch_threads(t_params *params)
+static int	launch_threads(t_params *params)
 {
 	int	i;
 
@@ -34,25 +34,19 @@ int	launch_threads(t_params *params)
 	i = 0;
 	while (i < params->nb_philos)
 	{
-		if (pthread_create(&params->philo_tab[i].thread, NULL, &philo_routine, &params->philo_tab[i]) != 0)
-			return (print_error("one of the philosopher threads failed to launch."));
+		if (pthread_create(&params->philo_tab[i].thread, NULL, \
+			&philo_routine, &params->philo_tab[i]) != 0)
+			return (print_error("one of the philosopher threads \
+				failed to launch."));
 		i++;
 	}
 	if (params->nb_philos > 1)
 	{
-		if (pthread_create(&params->death_checker, NULL, &death_routine, params) != 0)
+		if (pthread_create(&params->death_checker, NULL, \
+			&death_routine, params) != 0)
 			return (print_error("death checker thread failed to launch."));
 	}
 	return (1);
-}
-
-void	debug_print_params(t_params *params)
-{
-	printf("nb_philos: %d\n", params->nb_philos);
-	printf("t_die: %d\n", params->time_to_die);
-	printf("t_eat: %d\n", params->time_to_eat);
-	printf("t_sleep: %d\n", params->time_to_sleep);
-	printf("max_meal: %d\n", params->max_meal);
 }
 
 int	main(int argc, char **argv)

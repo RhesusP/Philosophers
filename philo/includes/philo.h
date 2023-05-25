@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/04 13:23:06 by cbernot           #+#    #+#             */
-/*   Updated: 2023/05/25 16:22:26 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/05/25 16:49:51 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,17 @@ typedef struct s_philo
 	t_params			*params;
 }	t_philo;
 
+void				*death_routine(void *arg);
+int					ft_atoi(const char *str);
 int					print_error(char *msg);
 int					init_params(t_params *param, int argc, char **argv);
-unsigned long long	get_current_ts(void);
-int					ft_atoi(const char *str);
+int					is_input_valid(t_params *param, char **argv, int argc);
 void				*philo_routine(void *arg);
-void				*death_routine(void *arg);
 int					is_stopped(t_params *params);
+
+unsigned long long	get_current_ts(void);
+void				ft_sleep(t_params *params, unsigned long long time);
 void				print_action(t_philo *philo, char *action);
+int					is_philo_dead(t_philo *philo);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 11:57:31 by cbernot           #+#    #+#             */
-/*   Updated: 2023/04/27 09:37:22 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/05/25 16:45:43 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	ft_isspace(const char c)
  * @return Zero if the character tests false and return non-zero if the
  * character tests true.
  */
-int	ft_isdigit(int c)
+static int	ft_isdigit(int c)
 {
 	if (c >= 48 && c <= 57)
 		return (1);

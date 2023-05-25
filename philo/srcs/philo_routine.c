@@ -6,26 +6,13 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:14:36 by cbernot           #+#    #+#             */
-/*   Updated: 2023/05/25 16:30:43 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/05/25 16:47:58 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./../includes/philo.h"
 
-void	ft_sleep(t_params *params, unsigned long long time)
-{
-	unsigned long long	limit;
-
-	limit = get_current_ts() + time;
-	while (get_current_ts() < limit)
-	{
-		if (is_stopped(params))
-			break ;
-		usleep(100);
-	}
-}
-
-void	*alone_philo_routine(t_philo *philo)
+static void	*alone_philo_routine(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->params->forks[philo->right_fork]);
 	print_action(philo, "has taken a fork");
@@ -35,7 +22,7 @@ void	*alone_philo_routine(t_philo *philo)
 	return (NULL);
 }
 
-void	take_forks(t_philo *philo)
+static void	take_forks(t_philo *philo)
 {
 	if (philo->id % 2 == 0)
 	{
@@ -53,7 +40,7 @@ void	take_forks(t_philo *philo)
 	}
 }
 
-void	ft_eat(t_philo *philo)
+static void	ft_eat(t_philo *philo)
 {
 	take_forks(philo);
 	print_action(philo, "is eating");
