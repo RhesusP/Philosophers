@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:39:24 by cbernot           #+#    #+#             */
-/*   Updated: 2023/05/25 16:45:32 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/05/26 08:57:37 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,20 @@ static int	set_stop(t_params *params, int value)
 	return (1);
 }
 
+static void	print_dead(t_philo *philo)
+{
+	unsigned long long	time;
+
+	pthread_mutex_lock(&philo->params->write_lock);
+	time = get_current_ts() - philo->params->start_ts;
+	printf("%lld %d %s\n", time, philo->id, "died");
+	pthread_mutex_unlock(&philo->params->write_lock);
+}
+
 static int	need_stop(t_params *params)
 {
-	int	i;
-	int	all_ate;
+	int			i;
+	int			all_ate;
 
 	i = 0;
 	all_ate = 1;
@@ -42,6 +52,7 @@ static int	need_stop(t_params *params)
 		pthread_mutex_lock(&params->philo_tab[i].last_meal_lock);
 		if (is_philo_dead(&params->philo_tab[i]))
 		{
+			print_dead(&params->philo_tab[i]);
 			pthread_mutex_unlock(&params->philo_tab[i].last_meal_lock);
 			return (1);
 		}

@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 11:57:46 by cbernot           #+#    #+#             */
-/*   Updated: 2023/05/25 16:53:01 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/05/26 08:43:45 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ int	is_philo_dead(t_philo *philo)
 		pthread_mutex_lock(&philo->params->stop_lock);
 		philo->params->stop = 1;
 		pthread_mutex_unlock(&philo->params->stop_lock);
-		print_action(philo, "died");
 		return (1);
 	}
 	return (0);

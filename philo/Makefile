@@ -6,7 +6,7 @@
 #    By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/04 13:41:24 by cbernot           #+#    #+#              #
-#    Updated: 2023/05/25 16:53:21 by cbernot          ###   ########.fr        #
+#    Updated: 2023/05/26 08:56:45 by cbernot          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,13 +21,15 @@ SRCS =  ./srcs/main.c \
 
 OBJS = ${SRCS:.c=.o}
 INCLUDES = ./includes
-FLAGS = -Wall -Werror -Wextra -pthread -fsanitize=thread -g -ltsan
+FLAGS = -Wall -Werror -Wextra -pthread
+#-fsanitize=thread -g -ltsan
 
 %.o : %.c ./includes/philo.h Makefile
 	cc ${FLAGS} -I ${INCLUDES} -c $< -o $@
 
 ${NAME}: ${OBJS}
-	cc ${OBJS} -pthread -ltsan -o ${NAME}
+	cc ${OBJS} -pthread -o ${NAME}
+#-ltsan
 
 all: ${NAME}
 
