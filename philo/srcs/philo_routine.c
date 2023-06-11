@@ -6,58 +6,76 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:14:36 by cbernot           #+#    #+#             */
-/*   Updated: 2023/05/25 16:47:58 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/06/11 12:50:52 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./../includes/philo.h"
 
-static void	*alone_philo_routine(t_philo *philo)
+void	*solo_philo_routine(void *arg)
 {
-	pthread_mutex_lock(&philo->params->forks[philo->right_fork]);
+	t_philo	*philo;
+
+	philo = (t_philo *)arg;
+	pthread_mutex_lock(&philo->param->forks[philo->right_fork]);
 	print_action(philo, "has taken a fork");
-	ft_sleep(philo->params, philo->params->time_to_die);
+	ft_sleep(philo->param, philo->param->time_to_die);
 	print_action(philo, "died");
-	pthread_mutex_unlock(&philo->params->forks[philo->right_fork]);
+	pthread_mutex_unlock(&philo->param->forks[philo->right_fork]);
 	return (NULL);
 }
 
-static void	take_forks(t_philo *philo)
+void	ft_think(t_philo *philo)
+{
+	//ft_sleep(philo->param, philo->param.)
+	print_action(philo, "is thinking");
+}
+
+void	synchronize_threads(unsigned long long time)
+{
+	while (get_current_ts() < time)
+		continue ;
+}
+
+void	ft_eat(t_philo *philo)
 {
 	if (philo->id % 2 == 0)
 	{
-		pthread_mutex_lock(&philo->params->forks[philo->left_fork]);
+		pthread_mutex_lock(&philo->param->forks[philo->left_fork]);
 		print_action(philo, "has taken a fork");
-		pthread_mutex_lock(&philo->params->forks[philo->right_fork]);
+		pthread_mutex_lock(&philo->param->forks[philo->right_fork]);
 		print_action(philo, "has taken a fork");
 	}
 	else
 	{
-		pthread_mutex_lock(&philo->params->forks[philo->right_fork]);
+		pthread_mutex_lock(&philo->param->forks[philo->right_fork]);
 		print_action(philo, "has taken a fork");
-		pthread_mutex_lock(&philo->params->forks[philo->left_fork]);
+		pthread_mutex_lock(&philo->param->forks[philo->left_fork]);
 		print_action(philo, "has taken a fork");
 	}
-}
-
-static void	ft_eat(t_philo *philo)
-{
-	take_forks(philo);
 	print_action(philo, "is eating");
 	pthread_mutex_lock(&philo->last_meal_lock);
 	philo->last_meal_ts = get_current_ts();
 	pthread_mutex_unlock(&philo->last_meal_lock);
-	ft_sleep(philo->params, philo->params->time_to_eat);
-	if (!is_stopped(philo->params))
+	ft_sleep(philo->param, philo->param->time_to_eat);
+	if (!is_stopped(philo->param))
 	{
 		pthread_mutex_lock(&philo->last_meal_lock);
-		philo->meals_nb += 1;
+		philo->nb_meals++;
 		pthread_mutex_unlock(&philo->last_meal_lock);
 	}
+	if (philo->id % 2 == 0)
+	{
+		pthread_mutex_unlock(&philo->param->forks[philo->right_fork]);
+		pthread_mutex_unlock(&philo->param->forks[philo->left_fork]);
+	}
+	else
+	{
+		pthread_mutex_unlock(&philo->param->forks[philo->left_fork]);
+		pthread_mutex_unlock(&philo->param->forks[philo->right_fork]);
+	}
 	print_action(philo, "is sleeping");
-	pthread_mutex_unlock(&philo->params->forks[philo->right_fork]);
-	pthread_mutex_unlock(&philo->params->forks[philo->left_fork]);
-	ft_sleep(philo->params, philo->params->time_to_sleep);
+	ft_sleep(philo->param, philo->param->time_to_sleep);
 }
 
 void	*philo_routine(void *arg)
@@ -65,15 +83,16 @@ void	*philo_routine(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	pthread_mutex_lock(&philo->last_meal_lock);
-	philo->last_meal_ts = philo->params->start_ts;
-	pthread_mutex_unlock(&philo->last_meal_lock);
-	if (philo->params->nb_philos == 1)
-		return (alone_philo_routine(philo));
-	while (!is_stopped(philo->params))
+	synchronize_threads(philo->param->start_time);
+	if (philo->param->time_to_die == 0)
+		return (NULL);
+	if (philo->param->nb_philos == 1)
+		return (solo_philo_routine(philo));
+	while (!is_stopped(philo->param))
 	{
 		ft_eat(philo);
-		print_action(philo, "is thinking");
+		ft_think(philo);
 	}
+
 	return (NULL);
 }

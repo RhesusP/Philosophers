@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 22:22:35 by cbernot           #+#    #+#             */
-/*   Updated: 2023/05/25 16:46:42 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/06/11 12:25:52 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,23 +18,26 @@ int	print_error(char *msg)
 	return (0);
 }
 
-static int	init_mutexes(t_params *params)
+static int	init_mutexes(t_params *param)
 {
 	int	i;
 
 	i = 0;
-	if (pthread_mutex_init(&params->stop_lock, NULL) != 0)
+	if (pthread_mutex_init(&param->write_lock, NULL) != 0)
 		return (print_error("mutex failed to initialize."));
-	if (pthread_mutex_init(&params->write_lock, NULL) != 0)
+	if (pthread_mutex_init(&param->is_dead_lock, NULL) != 0)
 		return (print_error("mutex failed to initialize."));
-	params->forks = malloc(sizeof(pthread_mutex_t) * (params->nb_philos + 1));
-	if (!params->forks)
-		return (print_error("malloc failed."));
-	while (i < params->nb_philos)
+	param->forks = malloc(sizeof(pthread_mutex_t) * (param->nb_philos + 1));
+	if (!param->forks)
 	{
-		if (pthread_mutex_init(&params->forks[i], NULL) != 0)
+		free(param->philos);
+		return (print_error("malloc failed."));
+	}
+	while (i < param->nb_philos)
+	{
+		if (pthread_mutex_init(&param->forks[i], NULL) != 0)
 		{
-			free(params->forks);
+			free(param->forks);
 			return (print_error("mutex failed to initialize."));
 		}
 		i++;
@@ -51,47 +54,50 @@ static void	get_forks(t_philo *philo, int nb_philo)
 		philo->left_fork = philo->id - 2;
 }
 
-static int	init_philos(t_params *params)
+static int	init_philos(t_params *param)
 {
 	int	i;
 
-	params->philo_tab = malloc(sizeof(t_philo) * (params->nb_philos + 1));
-	if (!params->philo_tab)
-	{
-		free(params->forks);
+	param->philos = malloc(sizeof(t_philo) * (param->nb_philos + 1));
+	if (!param->philos)
 		return (print_error("malloc failed."));
-	}
 	i = 0;
-	while (i < params->nb_philos)
+	while (i < param->nb_philos)
 	{
-		params->philo_tab[i].id = i + 1;
-		params->philo_tab[i].meals_nb = 0;
-		params->philo_tab[i].params = params;
-		if (pthread_mutex_init(&params->philo_tab[i].last_meal_lock, NULL) != 0)
-		{
-			free(params->forks);
-			free(params->philo_tab);
-			return (print_error("mutex failed to initialize."));
-		}
-		get_forks(&params->philo_tab[i], params->nb_philos);
+		param->philos[i].id = i + 1;
+		param->philos[i].nb_meals = 0;
+		param->philos[i].param = param;
+		get_forks(&param->philos[i], param->nb_philos);
+		if (pthread_mutex_init(&param->philos[i].last_meal_lock, NULL) != 0)
+			return (0);	//TODO secure
 		i++;
 	}
 	return (1);
 }
 
-int	init_params(t_params *param, int argc, char **argv)
+t_params	*init_params(int argc, char **argv)
 {
+	t_params	*param;
+
+	param = malloc(sizeof(t_params));
+	if (!param)
+		return (0);
 	if (argc < 5 || argc > 6)
 	{
 		printf("[!] USAGE: ./philo nb_philos die eat sleep [nb_meal]\n");
 		return (0);
 	}
 	if (!is_input_valid(param, argv, argc))
+	{
+		free(param);
 		return (0);
-	param->stop = 0;
-	if (!init_mutexes(param))
-		return (0);
+	}	
+	param->is_dead = 0;
 	if (!init_philos(param))
+	{
+		free(param);
 		return (0);
-	return (1);
+	}
+	init_mutexes(param);
+	return (param);
 }

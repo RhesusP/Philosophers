@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 16:41:15 by cbernot           #+#    #+#             */
-/*   Updated: 2023/05/25 16:47:12 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/06/08 17:21:39 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,10 +80,14 @@ int	is_input_valid(t_params *param, char **argv, int argc)
 	param->max_meal = -1;
 	if (argc == 6)
 		param->max_meal = ft_atoi(argv[5]);
-	if (!(param->nb_philos >= 1 && param->time_to_die >= 1 && \
-		param->time_to_eat >= 1 && param->time_to_sleep >= 1))
-		return (print_error("parameters must be a positive non-zero integer."));
-	if (argc == 6 && !(param->max_meal >= 1))
-		return (print_error("parameters must be a positive non-zero integer."));
+	if (!(param->nb_philos >= 0 && param->time_to_die >= 0 && \
+		param->time_to_eat >= 0 && param->time_to_sleep >= 0))
+		return (print_error("parameters must be a positive integer."));
+	if (argc == 6 && !(param->max_meal >= 0))
+		return (print_error("parameters must be a positive integer."));
+	if (param->nb_philos == 0)
+		return (print_error("simulation must have at least one philosopher."));
+	if (param->max_meal == 0)
+		return (0);
 	return (1);
 }

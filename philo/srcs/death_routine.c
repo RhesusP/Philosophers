@@ -6,78 +6,76 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:39:24 by cbernot           #+#    #+#             */
-/*   Updated: 2023/05/26 08:57:37 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/06/11 12:50:02 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./../includes/philo.h"
 
-int	is_stopped(t_params *params)
+int	philo_died(t_philo *philo)
 {
-	int	stopped;
+	unsigned long long	now;
 
-	pthread_mutex_lock(&params->stop_lock);
-	stopped = params->stop;
-	pthread_mutex_unlock(&params->stop_lock);
-	return (stopped);
+	now = get_current_ts();
+	if (now - philo->last_meal_ts >= (unsigned long long)philo->param->time_to_die)
+	{
+		pthread_mutex_lock(&philo->param->is_dead_lock);
+		philo->param->is_dead = 1;
+		pthread_mutex_unlock(&philo->param->is_dead_lock);
+		print_action(philo, "died");
+		pthread_mutex_unlock(&philo->last_meal_lock);
+		return (1);
+	}
+	return (0);
 }
 
-static int	set_stop(t_params *params, int value)
+int	need_stop(t_params *param)
 {
-	pthread_mutex_lock(&params->stop_lock);
-	params->stop = value;
-	pthread_mutex_unlock(&params->stop_lock);
-	return (1);
-}
-
-static void	print_dead(t_philo *philo)
-{
-	unsigned long long	time;
-
-	pthread_mutex_lock(&philo->params->write_lock);
-	time = get_current_ts() - philo->params->start_ts;
-	printf("%lld %d %s\n", time, philo->id, "died");
-	pthread_mutex_unlock(&philo->params->write_lock);
-}
-
-static int	need_stop(t_params *params)
-{
-	int			i;
-	int			all_ate;
+	int	i;
+	int	all_ate;
 
 	i = 0;
 	all_ate = 1;
-	while (i < params->nb_philos)
+	while (i < param->nb_philos)
 	{
-		pthread_mutex_lock(&params->philo_tab[i].last_meal_lock);
-		if (is_philo_dead(&params->philo_tab[i]))
+		pthread_mutex_lock(&param->philos[i].last_meal_lock);
+		if (philo_died(&param->philos[i]))
 		{
-			print_dead(&params->philo_tab[i]);
-			pthread_mutex_unlock(&params->philo_tab[i].last_meal_lock);
+			pthread_mutex_unlock(&param->philos[i].last_meal_lock);
 			return (1);
 		}
-		if (params->max_meal != -1)
+		if (param->max_meal != -1)
 		{
-			if (params->philo_tab[i].meals_nb < params->max_meal)
+			if (param->philos[i].nb_meals < param->max_meal)
 				all_ate = 0;
 		}
-		pthread_mutex_unlock(&params->philo_tab[i].last_meal_lock);
+		pthread_mutex_unlock(&param->philos[i].last_meal_lock);
 		i++;
 	}
-	if (params->max_meal != -1 && all_ate)
-		return (set_stop(params, 1));
+	if (param->max_meal != -1 && all_ate)
+	{
+		pthread_mutex_lock(&param->is_dead_lock);
+		param->is_dead = 1;
+		pthread_mutex_unlock(&param->is_dead_lock);
+		return (1);
+	}
 	return (0);
 }
 
 void	*death_routine(void *arg)
 {
-	t_params	*params;
+	t_params	*param;
 
-	params = (t_params *)arg;
-	usleep(10);
+	param = (t_params *)arg;
+	if (param->max_meal == 0)
+		return (NULL);
+	synchronize_threads(param->start_time);
+	pthread_mutex_lock(&param->is_dead_lock);
+	param->is_dead = 0;
+	pthread_mutex_unlock(&param->is_dead_lock);
 	while (1)
 	{
-		if (need_stop(params))
+		if (need_stop(param))
 			return (NULL);
 		usleep(1000);
 	}
