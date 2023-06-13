@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 11:57:46 by cbernot           #+#    #+#             */
-/*   Updated: 2023/06/08 19:15:53 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/06/11 13:10:51 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,10 @@ void	ft_sleep(t_params *params, unsigned long long time)
 	}
 }
 
-void	print_action(t_philo *philo, char *status)
+void	print_action(t_philo *philo, char *status, int force)
 {
 	pthread_mutex_lock(&philo->param->write_lock);
-	if (is_stopped(philo->param))
+	if (!force && is_stopped(philo->param))
 	{
 		pthread_mutex_unlock(&philo->param->write_lock);
 		return ;

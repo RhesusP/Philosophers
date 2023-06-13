@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:39:24 by cbernot           #+#    #+#             */
-/*   Updated: 2023/06/11 12:50:02 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/06/11 22:21:02 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	philo_died(t_philo *philo)
 		pthread_mutex_lock(&philo->param->is_dead_lock);
 		philo->param->is_dead = 1;
 		pthread_mutex_unlock(&philo->param->is_dead_lock);
-		print_action(philo, "died");
+		print_action(philo, "died", 1);
 		pthread_mutex_unlock(&philo->last_meal_lock);
 		return (1);
 	}
@@ -40,10 +40,7 @@ int	need_stop(t_params *param)
 	{
 		pthread_mutex_lock(&param->philos[i].last_meal_lock);
 		if (philo_died(&param->philos[i]))
-		{
-			pthread_mutex_unlock(&param->philos[i].last_meal_lock);
 			return (1);
-		}
 		if (param->max_meal != -1)
 		{
 			if (param->philos[i].nb_meals < param->max_meal)

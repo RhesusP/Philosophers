@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/04 13:23:06 by cbernot           #+#    #+#             */
-/*   Updated: 2023/06/11 12:48:58 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/06/11 13:11:07 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void				*solo_philo_routine(void *arg);
 void				*philo_routine(void *arg);
 void				*death_routine(void *arg);
 
-void				print_action(t_philo *philo, char *status);
+void				print_action(t_philo *philo, char *status, int force);
 void				ft_sleep(t_params *params, unsigned long long time);
 int					is_stopped(t_params *param);
 unsigned long long	get_current_ts(void);

@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 22:22:35 by cbernot           #+#    #+#             */
-/*   Updated: 2023/06/11 12:25:52 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/06/11 22:20:07 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static int	init_philos(t_params *param)
 {
 	int	i;
 
-	param->philos = malloc(sizeof(t_philo) * (param->nb_philos + 1));
+	param->philos = malloc(sizeof(t_philo) * (param->nb_philos));
 	if (!param->philos)
 		return (print_error("malloc failed."));
 	i = 0;
@@ -69,7 +69,7 @@ static int	init_philos(t_params *param)
 		param->philos[i].param = param;
 		get_forks(&param->philos[i], param->nb_philos);
 		if (pthread_mutex_init(&param->philos[i].last_meal_lock, NULL) != 0)
-			return (0);	//TODO secure
+			return (0);
 		i++;
 	}
 	return (1);
