@@ -6,13 +6,13 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:14:36 by cbernot           #+#    #+#             */
-/*   Updated: 2023/06/12 09:25:12 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/06/14 11:44:18 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./../includes/philo.h"
 
-void	*solo_philo_routine(void *arg)
+static void	*solo_philo_routine(void *arg)
 {
 	t_philo	*philo;
 
@@ -25,7 +25,7 @@ void	*solo_philo_routine(void *arg)
 	return (NULL);
 }
 
-void	ft_think(t_philo *philo)
+static void	ft_think(t_philo *philo)
 {
 	print_action(philo, "is thinking", 0);
 }
@@ -36,7 +36,7 @@ void	synchronize_threads(unsigned long long time)
 		continue ;
 }
 
-void	ft_eat(t_philo *philo)
+static void	ft_eat(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->param->forks[philo->left_fork]);
 	print_action(philo, "has taken a fork", 0);

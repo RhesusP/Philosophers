@@ -6,18 +6,20 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:39:24 by cbernot           #+#    #+#             */
-/*   Updated: 2023/06/11 22:21:02 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/06/14 11:28:56 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./../includes/philo.h"
 
-int	philo_died(t_philo *philo)
+static int	philo_died(t_philo *philo)
 {
 	unsigned long long	now;
+	unsigned long long	time_to_die;
 
+	time_to_die = (unsigned long long)philo->param->time_to_die;
 	now = get_current_ts();
-	if (now - philo->last_meal_ts >= (unsigned long long)philo->param->time_to_die)
+	if (now - philo->last_meal_ts >= time_to_die)
 	{
 		pthread_mutex_lock(&philo->param->is_dead_lock);
 		philo->param->is_dead = 1;
@@ -29,7 +31,19 @@ int	philo_died(t_philo *philo)
 	return (0);
 }
 
-int	need_stop(t_params *param)
+static int	all_philos_ate(t_params *param, int all_ate)
+{
+	if (param->max_meal != -1 && all_ate)
+	{
+		pthread_mutex_lock(&param->is_dead_lock);
+		param->is_dead = 1;
+		pthread_mutex_unlock(&param->is_dead_lock);
+		return (1);
+	}
+	return (0);
+}
+
+static int	need_stop(t_params *param)
 {
 	int	i;
 	int	all_ate;
@@ -49,13 +63,8 @@ int	need_stop(t_params *param)
 		pthread_mutex_unlock(&param->philos[i].last_meal_lock);
 		i++;
 	}
-	if (param->max_meal != -1 && all_ate)
-	{
-		pthread_mutex_lock(&param->is_dead_lock);
-		param->is_dead = 1;
-		pthread_mutex_unlock(&param->is_dead_lock);
+	if (all_philos_ate(param, all_ate))
 		return (1);
-	}
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/12 11:57:46 by cbernot           #+#    #+#             */
-/*   Updated: 2023/06/11 13:10:51 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/06/14 11:30:01 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ void	print_action(t_philo *philo, char *status, int force)
 		pthread_mutex_unlock(&philo->param->write_lock);
 		return ;
 	}
-	printf("%lld %d %s\n", get_current_ts() - philo->param->start_time, philo->id, status);
+	printf("%lld %d %s\n", get_current_ts() - philo->param->start_time, \
+	philo->id, status);
 	pthread_mutex_unlock(&philo->param->write_lock);
 }

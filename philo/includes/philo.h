@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/04 13:23:06 by cbernot           #+#    #+#             */
-/*   Updated: 2023/06/11 13:11:07 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/06/14 11:44:10 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include <sys/time.h>
 # include <pthread.h>
 
-struct s_params;
+struct	s_params;
 
 typedef struct s_philo
 {
@@ -40,9 +40,7 @@ typedef struct s_params
 	int					time_to_eat;
 	int					time_to_sleep;
 	int					max_meal;
-	
 	unsigned long long	start_time;
-	
 	int					is_dead;
 	pthread_mutex_t		is_dead_lock;
 	t_philo				*philos;		
@@ -51,13 +49,10 @@ typedef struct s_params
 	pthread_mutex_t		write_lock;
 }	t_params;
 
-//maybe replace by pointer on array
-
 int					ft_atoi(const char *str);
 int					print_error(char *msg);
 t_params			*init_params(int argc, char **argv);
 int					is_input_valid(t_params *param, char **argv, int argc);
-void				*solo_philo_routine(void *arg);
 void				*philo_routine(void *arg);
 void				*death_routine(void *arg);
 

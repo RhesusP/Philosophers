@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 16:41:15 by cbernot           #+#    #+#             */
-/*   Updated: 2023/06/08 17:21:39 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/06/14 11:23:31 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,17 @@ static int	is_valid_int(char *str)
 	return (1);
 }
 
+static void	fill_param_input(t_params *param, char **argv, int argc)
+{
+	param->nb_philos = ft_atoi(argv[1]);
+	param->time_to_die = ft_atoi(argv[2]);
+	param->time_to_eat = ft_atoi(argv[3]);
+	param->time_to_sleep = ft_atoi(argv[4]);
+	param->max_meal = -1;
+	if (argc == 6)
+		param->max_meal = ft_atoi(argv[5]);
+}
+
 int	is_input_valid(t_params *param, char **argv, int argc)
 {
 	int	i;
@@ -73,13 +84,7 @@ int	is_input_valid(t_params *param, char **argv, int argc)
 		}
 		i++;
 	}
-	param->nb_philos = ft_atoi(argv[1]);
-	param->time_to_die = ft_atoi(argv[2]);
-	param->time_to_eat = ft_atoi(argv[3]);
-	param->time_to_sleep = ft_atoi(argv[4]);
-	param->max_meal = -1;
-	if (argc == 6)
-		param->max_meal = ft_atoi(argv[5]);
+	fill_param_input(param, argv, argc);
 	if (!(param->nb_philos >= 0 && param->time_to_die >= 0 && \
 		param->time_to_eat >= 0 && param->time_to_sleep >= 0))
 		return (print_error("parameters must be a positive integer."));

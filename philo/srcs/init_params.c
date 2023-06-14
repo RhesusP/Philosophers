@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 22:22:35 by cbernot           #+#    #+#             */
-/*   Updated: 2023/06/11 22:20:07 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/06/14 11:29:12 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ static int	init_mutexes(t_params *param)
 	{
 		if (pthread_mutex_init(&param->forks[i], NULL) != 0)
 		{
+			free(param->philos);
 			free(param->forks);
 			return (print_error("mutex failed to initialize."));
 		}
@@ -69,7 +70,10 @@ static int	init_philos(t_params *param)
 		param->philos[i].param = param;
 		get_forks(&param->philos[i], param->nb_philos);
 		if (pthread_mutex_init(&param->philos[i].last_meal_lock, NULL) != 0)
+		{
+			free(param->philos);
 			return (0);
+		}
 		i++;
 	}
 	return (1);
@@ -87,17 +91,16 @@ t_params	*init_params(int argc, char **argv)
 		printf("[!] USAGE: ./philo nb_philos die eat sleep [nb_meal]\n");
 		return (0);
 	}
-	if (!is_input_valid(param, argv, argc))
+	if (!is_input_valid(param, argv, argc) || !init_philos(param))
 	{
 		free(param);
 		return (0);
 	}	
 	param->is_dead = 0;
-	if (!init_philos(param))
+	if (!init_mutexes(param))
 	{
 		free(param);
 		return (0);
 	}
-	init_mutexes(param);
 	return (param);
 }
