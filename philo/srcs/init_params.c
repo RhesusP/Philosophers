@@ -6,18 +6,30 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/21 22:22:35 by cbernot           #+#    #+#             */
-/*   Updated: 2023/06/14 11:29:12 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/06/23 12:47:53 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./../includes/philo.h"
 
+/**
+ * @brief Display an error message and return 0.
+ * 
+ * @param msg 
+ * @return int (0)
+ */
 int	print_error(char *msg)
 {
 	printf("Error: %s\n", msg);
 	return (0);
 }
 
+/**
+ * @brief Initialize the mutexes (locks).
+ * 
+ * @param param 
+ * @return 1 if success, 0 failure
+ */
 static int	init_mutexes(t_params *param)
 {
 	int	i;
@@ -46,6 +58,12 @@ static int	init_mutexes(t_params *param)
 	return (1);
 }
 
+/**
+ * @brief Attribute the forks to each philosopher.
+ * 
+ * @param philo 
+ * @param nb_philo 
+ */
 static void	get_forks(t_philo *philo, int nb_philo)
 {
 	philo->right_fork = philo->id - 1;
@@ -55,6 +73,12 @@ static void	get_forks(t_philo *philo, int nb_philo)
 		philo->left_fork = philo->id - 2;
 }
 
+/**
+ * @brief Create and initialize the struct t_philo
+ * 
+ * @param param 
+ * @return 1 if success, 0 failure
+ */
 static int	init_philos(t_params *param)
 {
 	int	i;
@@ -79,6 +103,13 @@ static int	init_philos(t_params *param)
 	return (1);
 }
 
+/**
+ * @brief Create and initialize the struct t_params with the input arguments.
+ * 
+ * @param argc 
+ * @param argv 
+ * @return t_params*
+ */
 t_params	*init_params(int argc, char **argv)
 {
 	t_params	*param;

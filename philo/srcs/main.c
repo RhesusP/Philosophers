@@ -6,12 +6,19 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/04 13:50:11 by cbernot           #+#    #+#             */
-/*   Updated: 2023/06/14 11:29:36 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/06/23 12:43:30 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./../includes/philo.h"
 
+/**
+ * @brief Launch the threads for each philosopher and the death checker thread
+ * if there is more than one philosopher.
+ * 
+ * @param param 
+ * @return 1 if success, 0 if failure.
+ */
 static int	launch_threads(t_params *param)
 {
 	int	i;
@@ -35,6 +42,12 @@ static int	launch_threads(t_params *param)
 	return (1);
 }
 
+/**
+ * @brief Wait for all threads to finish.
+ * 
+ * @param param 
+ * @return 1 if success, 0 if failure.
+ */
 static int	wait_threads(t_params *param)
 {
 	int	i;

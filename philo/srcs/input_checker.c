@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 16:41:15 by cbernot           #+#    #+#             */
-/*   Updated: 2023/06/14 11:23:31 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/06/23 12:44:56 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,14 @@ static void	fill_param_input(t_params *param, char **argv, int argc)
 		param->max_meal = ft_atoi(argv[5]);
 }
 
+/**
+ * @brief Check if the input is valid and fill a part of the param structure.
+ * 
+ * @param param 
+ * @param argv 
+ * @param argc 
+ * @return 1 if the input is valid, 0 otherwise.
+ */
 int	is_input_valid(t_params *param, char **argv, int argc)
 {
 	int	i;

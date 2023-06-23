@@ -6,12 +6,18 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 18:39:24 by cbernot           #+#    #+#             */
-/*   Updated: 2023/06/14 11:28:56 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/06/23 13:03:18 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./../includes/philo.h"
 
+/**
+ * @brief Check if a single philosopher died.
+ * 
+ * @param philo Philosopher to check
+ * @return 1 if the philosopher died, 0 otherwise
+ */
 static int	philo_died(t_philo *philo)
 {
 	unsigned long long	now;
@@ -24,13 +30,20 @@ static int	philo_died(t_philo *philo)
 		pthread_mutex_lock(&philo->param->is_dead_lock);
 		philo->param->is_dead = 1;
 		pthread_mutex_unlock(&philo->param->is_dead_lock);
-		print_action(philo, "died", 1);
+		print_action(philo, "died 💀");
 		pthread_mutex_unlock(&philo->last_meal_lock);
 		return (1);
 	}
 	return (0);
 }
 
+/**
+ * @brief Stopper if all philosophers ate.
+ * If all philosophers ate, set is_dead to 1.
+ * @param param 
+ * @param all_ate 
+ * @return all_ate
+ */
 static int	all_philos_ate(t_params *param, int all_ate)
 {
 	if (param->max_meal != -1 && all_ate)
@@ -43,6 +56,11 @@ static int	all_philos_ate(t_params *param, int all_ate)
 	return (0);
 }
 
+/**
+ * @brief Check simulation stop conditions (philosopher died or all ate)
+ * @param param 
+ * @return 1 if stop conditions are met, 0 otherwise
+ */
 static int	need_stop(t_params *param)
 {
 	int	i;
@@ -68,6 +86,12 @@ static int	need_stop(t_params *param)
 	return (0);
 }
 
+/**
+ * @brief Death checker routine.
+ * Check if a philosopher died or if all philosophers ate.
+ * @param arg t_params pointer casted as void*
+ * @return null
+ */
 void	*death_routine(void *arg)
 {
 	t_params	*param;

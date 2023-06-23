@@ -6,7 +6,7 @@
 /*   By: cbernot <cbernot@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/04 13:23:06 by cbernot           #+#    #+#             */
-/*   Updated: 2023/06/14 11:44:10 by cbernot          ###   ########.fr       */
+/*   Updated: 2023/06/23 13:05:08 by cbernot          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,17 +49,23 @@ typedef struct s_params
 	pthread_mutex_t		write_lock;
 }	t_params;
 
-int					ft_atoi(const char *str);
-int					print_error(char *msg);
+// PARSING AND INITIALIZATION
 t_params			*init_params(int argc, char **argv);
 int					is_input_valid(t_params *param, char **argv, int argc);
-void				*philo_routine(void *arg);
-void				*death_routine(void *arg);
 
-void				print_action(t_philo *philo, char *status, int force);
-void				ft_sleep(t_params *params, unsigned long long time);
+// UTILS 
+int					ft_atoi(const char *str);
+void				print_action(t_philo *philo, char *status);
+int					print_error(char *msg);
 int					is_stopped(t_params *param);
+
+// TIME UTILS
+void				ft_sleep(t_params *params, unsigned long long time);
 unsigned long long	get_current_ts(void);
 void				synchronize_threads(unsigned long long time);
+
+// ROUTINES
+void				*philo_routine(void *arg);
+void				*death_routine(void *arg);
 
 #endif
