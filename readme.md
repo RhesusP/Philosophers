@@ -2,14 +2,14 @@
 
 # Philosophers
 #### I never thought philosophy would be so deadly
-![forthebadge]("./../img/made-with-blood-and-tears.svg)
+![forthebadge](./philo/img/made-with-blood-and-tears.svg)
 
 </div>
 
 [School's 42](https://42.fr/en/homepage/) project to find a solution to the [dining philosophers problem](https://en.wikipedia.org/wiki/Dining_philosophers_problem). This project is an introduction to concurrent programming, synchronization and shared memory issues.
 <div align="center">
 
-![demo](./imgs/../img/philo_demo.gif)
+![demo](./philo/img/philo_demo.gif)
 </div>
 
 ## Dining philosophers problem
@@ -55,7 +55,7 @@ timestamp_in_ms X died
 ## Solution
 
 Here is a simplified diagram of how my program works.
-![diagram](./img/Philosophers.png)
+![diagram](./philo/img/philo_diagram.png)
 
 We can split this program in three parts : 
 - parsing
