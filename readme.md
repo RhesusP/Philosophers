@@ -157,6 +157,6 @@ This routine is even simplier. Death checker is in a `while(1)` loop. First, it 
 
 [Wikipedia page of dining philosophers problem](https://en.wikipedia.org/wiki/Dining_philosophers_problem)  
 [Philosophers visualizer](https://nafuka11.github.io/philosophers-visualizer/)  
-[42-philosophers-tester](https://github.com/dantonik/42-philosophers-tester)
-[Course about concurrent programming](https://people.cs.pitt.edu/~aus/cs449/ts-lecture19.pdf)
+[42-philosophers-tester](https://github.com/dantonik/42-philosophers-tester)  
+[Course about concurrent programming](https://people.cs.pitt.edu/~aus/cs449/ts-lecture19.pdf)  
 [Blog article about threads and mutexes in c](https://www.codequoi.com/en/threads-mutexes-and-concurrent-programming-in-c/)
