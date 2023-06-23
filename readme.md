@@ -69,29 +69,29 @@ I decided to create two structures. The first to store all parameters shared bet
 ```c
 typedef struct s_params
 {
-	int					nb_philos;
-	int					time_to_die;
-	int					time_to_eat;
-	int					time_to_sleep;
-	int					max_meal;
+	int			nb_philos;
+	int			time_to_die;
+	int			time_to_eat;
+	int			time_to_sleep;
+	int			max_meal;
 	unsigned long long	start_time;
-	int					is_dead;
+	int			is_dead;
 	pthread_mutex_t		is_dead_lock;
-	t_philo				*philos;		
-	pthread_t			death_checker;
+	t_philo			*philos;		
+	pthread_t		death_checker;
 	pthread_mutex_t		*forks;
 	pthread_mutex_t		write_lock;
 }	t_params;
 
 typedef struct s_philo
 {
-	pthread_t			thread;				
-	int					id;
-	int					nb_meals;
+	pthread_t		thread;				
+	int			id;
+	int			nb_meals;
 	unsigned long long	last_meal_ts;
 	pthread_mutex_t		last_meal_lock;
-	int					left_fork;
-	int					right_fork;
+	int			left_fork;
+	int			right_fork;
 	struct s_params		*param;	
 }	t_philo;
 ```
